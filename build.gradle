@@ -1,6 +1,5 @@
 plugins {
-    id 'com.android.library'
-    id 'maven-publish'
+    id 'com.android.library' version '8.7.3'
 }
 
 android {
@@ -51,5 +50,5 @@ android {
 }
 
 dependencies {
-    implementation libs.appcompat
+    implementation 'androidx.appcompat:appcompat:1.7.0'
 }
