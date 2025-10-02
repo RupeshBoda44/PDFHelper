@@ -1,4 +1,4 @@
-package com.shockwave.pdfium;
+package com.croma.pdfhelper;
 
 import java.io.IOException;
 

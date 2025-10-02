@@ -380,7 +380,7 @@ JNI_FUNC(jobject, PdfiumCore, nativeGetPageSizeByIndex)(JNI_ARGS, jlong docPtr, 
     jint widthInt = (jint) (width * dpi / 72);
     jint heightInt = (jint) (height * dpi / 72);
 
-    jclass clazz = env->FindClass("com/shockwave/pdfium/util/Size");
+    jclass clazz = env->FindClass("com/croma/pdfhelper/util/Size");
     jmethodID constructorID = env->GetMethodID(clazz, "<init>", "(II)V");
     return env->NewObject(clazz, constructorID, widthInt, heightInt);
 }

@@ -1,10 +1,10 @@
 plugins {
-    id 'com.android.library' version '8.7.3'
+    id 'com.android.library' version '8.11.2'
     id 'maven-publish'
 }
 
 android {
-    namespace "com.shockwave.pdfium"
+    namespace "com.croma.pdfhelper"
 
     compileSdk 36
 
@@ -59,7 +59,7 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
 }
 
 afterEvaluate {
@@ -68,7 +68,7 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
                 groupId = 'com.github.RupeshBoda44'
-                artifactId = 'PDFium'
+                artifactId = 'pdfhelper'
                 version = '1.0.0'
             }
         }
