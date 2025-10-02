@@ -158,3 +158,6 @@ public void printBookmarksTree(List<PdfDocument.Bookmark> tree, String sep) {
 ## Build native part
 Go to `PROJECT_PATH/src/main/jni` and run command `$ ndk-build`.
 This step may be executed only once, every future `.aar` build will use generated libs.
+
+
+[![](https://jitpack.io/v/RupeshBoda44/PDFium.svg)](https://jitpack.io/#RupeshBoda44/PDFium)
