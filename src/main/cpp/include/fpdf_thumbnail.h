@@ -1,6 +1,3 @@
-// Copyright 2019 The PDFium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
 
 #ifndef PUBLIC_FPDF_THUMBNAIL_H_
 #define PUBLIC_FPDF_THUMBNAIL_H_

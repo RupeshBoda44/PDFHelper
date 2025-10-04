@@ -1,8 +1,3 @@
-// Copyright 2014 The PDFium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-// Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #ifndef PUBLIC_FPDF_FORMFILL_H_
 #define PUBLIC_FPDF_FORMFILL_H_
@@ -98,41 +93,6 @@ typedef struct _IPDF_JsPlatform {
    */
   void (*app_beep)(struct _IPDF_JsPlatform* pThis, int nType);
 
-  /*
-   * Method: app_response
-   *       Displays a dialog box containing a question and an entry field for
-   *       the user to reply to the question.
-   * Interface Version:
-   *       1
-   * Implementation Required:
-   *       yes
-   * Parameters:
-   *       pThis       -   Pointer to the interface structure itself
-   *       Question    -   The question to be posed to the user.
-   *       Title       -   The title of the dialog box.
-   *       Default     -   A default value for the answer to the question. If
-   *                       not specified, no default value is presented.
-   *       cLabel      -   A short string to appear in front of and on the
-   *                       same line as the edit text field.
-   *       bPassword   -   If true, indicates that the user's response should
-   *                       be shown as asterisks (*) or bullets (?) to mask
-   *                       the response, which might be sensitive information.
-   *       response    -   A string buffer allocated by PDFium, to receive the
-   *                       user's response.
-   *       length      -   The length of the buffer in bytes. Currently, it is
-   *                       always 2048.
-   * Return Value:
-   *       Number of bytes the complete user input would actually require, not
-   *       including trailing zeros, regardless of the value of the length
-   *       parameter or the presence of the response buffer.
-   * Comments:
-   *       No matter on what platform, the response buffer should be always
-   *       written using UTF-16LE encoding. If a response buffer is
-   *       present and the size of the user input exceeds the capacity of the
-   *       buffer as specified by the length parameter, only the
-   *       first "length" bytes of the user input are to be written to the
-   *       buffer.
-   */
   int (*app_response)(struct _IPDF_JsPlatform* pThis,
                       FPDF_WIDESTRING Question,
                       FPDF_WIDESTRING Title,
@@ -306,11 +266,6 @@ typedef struct _IPDF_JsPlatform {
                       void* filePath,
                       int length);
 
-  /*
-   * Pointer for embedder-specific data. Unused by PDFium, and despite
-   * its name, can be any data the embedder desires, though traditionally
-   * a FPDF_FORMFILLINFO interface.
-   */
   void* m_pFormfillinfo;
 
   /* Version 2. */
@@ -375,37 +330,10 @@ typedef struct _FPDF_SYSTEMTIME {
 #endif  // PDF_ENABLE_XFA
 
 typedef struct _FPDF_FORMFILLINFO {
-  /*
-   * Version number of the interface.
-   * Version 1 contains stable interfaces. Version 2 has additional
-   * experimental interfaces.
-   * When PDFium is built without the XFA module, version can be 1 or 2.
-   * With version 1, only stable interfaces are called. With version 2,
-   * additional experimental interfaces are also called.
-   * When PDFium is built with the XFA module, version must be 2.
-   * All the XFA related interfaces are experimental. If PDFium is built with
-   * the XFA module and version 1 then none of the XFA related interfaces
-   * would be called. When PDFium is built with XFA module then the version
-   * must be 2.
-   */
   int version;
 
   /* Version 1. */
-  /*
-   * Method: Release
-   *       Give the implementation a chance to release any resources after the
-   *       interface is no longer used.
-   * Interface Version:
-   *       1
-   * Implementation Required:
-   *       No
-   * Comments:
-   *       Called by PDFium during the final cleanup process.
-   * Parameters:
-   *       pThis       -   Pointer to the interface structure itself
-   * Return Value:
-   *       None
-   */
+
   void (*Release)(struct _FPDF_FORMFILLINFO* pThis);
 
   /*
@@ -558,49 +486,12 @@ typedef struct _FPDF_FORMFILLINFO {
    */
   void (*FFI_OnChange)(struct _FPDF_FORMFILLINFO* pThis);
 
-  /*
-   * Method: FFI_GetPage
-   *       This method receives the page handle associated with a specified
-   *       page index.
-   * Interface Version:
-   *       1
-   * Implementation Required:
-   *       yes
-   * Parameters:
-   *       pThis       -   Pointer to the interface structure itself.
-   *       document    -   Handle to document. Returned by FPDF_LoadDocument().
-   *       nPageIndex  -   Index number of the page. 0 for the first page.
-   * Return value:
-   *       Handle to the page, as previously returned to the implementation by
-   *       FPDF_LoadPage().
-   * Comments:
-   *       The implementation is expected to keep track of the page handles it
-   *       receives from PDFium, and their mappings to page numbers. In some
-   *       cases, the document-level JavaScript action may refer to a page
-   *       which hadn't been loaded yet. To successfully run the Javascript
-   *       action, the implementation needs to load the page.
-   */
+
   FPDF_PAGE (*FFI_GetPage)(struct _FPDF_FORMFILLINFO* pThis,
                            FPDF_DOCUMENT document,
                            int nPageIndex);
 
-  /*
-   * Method: FFI_GetCurrentPage
-   *       This method receives the handle to the current page.
-   * Interface Version:
-   *       1
-   * Implementation Required:
-   *       Yes when V8 support is present, otherwise unused.
-   * Parameters:
-   *       pThis       -   Pointer to the interface structure itself.
-   *       document    -   Handle to document. Returned by FPDF_LoadDocument().
-   * Return value:
-   *       Handle to the page. Returned by FPDF_LoadPage().
-   * Comments:
-   *       PDFium doesn't keep keep track of the "current page" (e.g. the one
-   *       that is most visible on screen), so it must ask the embedder for
-   *       this information.
-   */
+
   FPDF_PAGE (*FFI_GetCurrentPage)(struct _FPDF_FORMFILLINFO* pThis,
                                   FPDF_DOCUMENT document);
 
@@ -728,11 +619,7 @@ typedef struct _FPDF_FORMFILLINFO {
                            float* fPosArray,
                            int sizeofArray);
 
-  /*
-   * Pointer to IPDF_JSPLATFORM interface.
-   * Unused if PDFium is built without V8 support. Otherwise, if NULL, then
-   * JavaScript will be prevented from executing while rendering the document.
-   */
+
   IPDF_JSPLATFORM* m_pJsPlatform;
 
   /* Version 2 - Experimental. */
@@ -1472,23 +1359,7 @@ FPDF_EXPORT FPDF_BOOL FPDF_CALLCONV FORM_OnKeyDown(FPDF_FORMHANDLE hHandle,
                                                    int nKeyCode,
                                                    int modifier);
 
-/*
- * Function: FORM_OnKeyUp
- *       Call this member function when a nonsystem key is released.
- * Parameters:
- *       hHandle     -   Handle to the form fill module, as returned by
- *                       FPDFDOC_InitFormFillEnvironment().
- *       page        -   Handle to the page, as returned by FPDF_LoadPage().
- *       nKeyCode    -   The virtual-key code of the given key (see
- *                       fpdf_fwlevent.h for virtual key codes).
- *       modifier    -   Mask of key flags (see fpdf_fwlevent.h for key
- *                       flag values).
- * Return Value:
- *       True indicates success; otherwise false.
- * Comments:
- *       Currently unimplemented and always returns false. PDFium reserves this
- *       API and may implement it in the future on an as-needed basis.
- */
+
 FPDF_EXPORT FPDF_BOOL FPDF_CALLCONV FORM_OnKeyUp(FPDF_FORMHANDLE hHandle,
                                                  FPDF_PAGE page,
                                                  int nKeyCode,
@@ -1988,16 +1859,7 @@ FORM_SetIndexSelected(FPDF_FORMHANDLE hHandle,
 FPDF_EXPORT FPDF_BOOL FPDF_CALLCONV
 FORM_IsIndexSelected(FPDF_FORMHANDLE hHandle, FPDF_PAGE page, int index);
 
-/*
- * Function: FPDF_LoadXFA
- *          If the document consists of XFA fields, call this method to
- *          attempt to load XFA fields.
- * Parameters:
- *          document     -   Handle to document from FPDF_LoadDocument().
- * Return Value:
- *          TRUE upon success, otherwise FALSE. If XFA support is not built
- *          into PDFium, performs no action and always returns FALSE.
- */
+
 FPDF_EXPORT FPDF_BOOL FPDF_CALLCONV FPDF_LoadXFA(FPDF_DOCUMENT document);
 
 #ifdef __cplusplus

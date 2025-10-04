@@ -1,8 +1,3 @@
-// Copyright 2014 The PDFium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-// Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #ifndef PUBLIC_FPDF_EXT_H_
 #define PUBLIC_FPDF_EXT_H_
@@ -71,7 +66,7 @@ FSDK_SetUnSpObjProcessHandler(UNSUPPORT_INFO* unsp_info);
 
 // Set replacement function for calls to time().
 //
-// This API is intended to be used only for testing, thus may cause PDFium to
+
 // behave poorly in production environments.
 //
 //   func - Function pointer to alternate implementation of time(), or
@@ -80,7 +75,6 @@ FPDF_EXPORT void FPDF_CALLCONV FSDK_SetTimeFunction(time_t (*func)());
 
 // Set replacement function for calls to localtime().
 //
-// This API is intended to be used only for testing, thus may cause PDFium to
 // behave poorly in production environments.
 //
 //   func - Function pointer to alternate implementation of localtime(), or

@@ -1,19 +1,3 @@
-// Copyright 2014 The PDFium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-// Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
-
-// This is the main header file for embedders of PDFium. It provides APIs to
-// initialize the library, load documents, and render pages, amongst other
-// things.
-//
-// NOTE: None of the PDFium APIs are thread-safe. They expect to be called
-// from a single thread. Barring that, embedders are required to ensure (via
-// a mutex or similar) that only a single PDFium call can be made at a time.
-//
-// NOTE: External docs refer to this file as "fpdfview.h", so do not rename
-// despite lack of consistency with other public files.
 
 #ifndef PUBLIC_FPDFVIEW_H_
 #define PUBLIC_FPDFVIEW_H_
@@ -27,7 +11,7 @@
 #endif
 
 #ifdef PDF_ENABLE_XFA
-// PDF_USE_XFA is set in confirmation that this version of PDFium can support
+
 // XFA forms as requested by the PDF_ENABLE_XFA setting.
 #define PDF_USE_XFA
 #endif  // PDF_ENABLE_XFA
@@ -106,13 +90,11 @@ typedef enum _FPDF_DUPLEXTYPE_ {
 // String types
 typedef unsigned short FPDF_WCHAR;
 
-// The public PDFium API uses three types of strings: byte string, wide string
+
 // (UTF-16LE encoded), and platform dependent string.
 
-// Public PDFium API type for byte strings.
 typedef const char* FPDF_BYTESTRING;
 
-// The public PDFium API always uses UTF-16LE encoded wide strings, each
 // character uses 2 bytes (except surrogation), with the low byte first.
 typedef const FPDF_WCHAR* FPDF_WIDESTRING;
 
@@ -249,10 +231,8 @@ typedef struct FPDF_LIBRARY_CONFIG_ {
 
   // Version 2.
 
-  // Pointer to the v8::Isolate to use, or NULL to force PDFium to create one.
   void* m_pIsolate;
 
-  // The embedder data slot to use in the v8::Isolate to store PDFium's
   // per-isolate data. The value needs to be in the range
   // [0, |v8::Internals::kNumIsolateDataLots|). Note that 0 is fine for most
   // embedders.
@@ -275,7 +255,6 @@ typedef struct FPDF_LIBRARY_CONFIG_ {
 } FPDF_LIBRARY_CONFIG;
 
 // Function: FPDF_InitLibraryWithConfig
-//          Initialize the PDFium library and allocate global resources for it.
 // Parameters:
 //          config - configuration information as above.
 // Return value:
@@ -287,7 +266,6 @@ FPDF_EXPORT void FPDF_CALLCONV
 FPDF_InitLibraryWithConfig(const FPDF_LIBRARY_CONFIG* config);
 
 // Function: FPDF_InitLibrary
-//          Initialize the PDFium library (alternative form).
 // Parameters:
 //          None
 // Return value:
@@ -300,7 +278,6 @@ FPDF_InitLibraryWithConfig(const FPDF_LIBRARY_CONFIG* config);
 FPDF_EXPORT void FPDF_CALLCONV FPDF_InitLibrary();
 
 // Function: FPDF_DestroyLibrary
-//          Release global resources allocated to the PDFium library by
 //          FPDF_InitLibrary() or FPDF_InitLibraryWithConfig().
 // Parameters:
 //          None.
@@ -400,9 +377,6 @@ FPDF_LoadDocument(FPDF_STRING file_path, FPDF_BYTESTRING password);
 //          See the comments for FPDF_LoadDocument() regarding the encoding for
 //          |password|.
 // Notes:
-//          If PDFium is built with the XFA module, the application should call
-//          FPDF_LoadXFA() function after the PDF document loaded to support XFA
-//          fields defined in the fpdfformfill.h file.
 FPDF_EXPORT FPDF_DOCUMENT FPDF_CALLCONV
 FPDF_LoadMemDocument(const void* data_buf, int size, FPDF_BYTESTRING password);
 
@@ -425,9 +399,6 @@ FPDF_LoadMemDocument(const void* data_buf, int size, FPDF_BYTESTRING password);
 //          See the comments for FPDF_LoadDocument() regarding the encoding for
 //          |password|.
 // Notes:
-//          If PDFium is built with the XFA module, the application should call
-//          FPDF_LoadXFA() function after the PDF document loaded to support XFA
-//          fields defined in the fpdfformfill.h file.
 FPDF_EXPORT FPDF_DOCUMENT FPDF_CALLCONV
 FPDF_LoadMemDocument64(const void* data_buf,
                        size_t size,
@@ -438,13 +409,6 @@ typedef struct {
   // File length, in bytes.
   unsigned long m_FileLen;
 
-  // A function pointer for getting a block of data from a specific position.
-  // Position is specified by byte offset from the beginning of the file.
-  // The pointer to the buffer is never NULL and the size is never 0.
-  // The position and size will never go out of range of the file length.
-  // It may be possible for PDFium to call this function multiple times for
-  // the same position.
-  // Return value: should be non-zero if successful, zero for error.
   int (*m_GetBlock)(void* param,
                     unsigned long position,
                     unsigned char* pBuf,
@@ -551,26 +515,6 @@ typedef struct FPDF_FILEHANDLER_ {
   FPDF_RESULT (*Truncate)(void* clientData, FPDF_DWORD size);
 } FPDF_FILEHANDLER;
 
-// Function: FPDF_LoadCustomDocument
-//          Load PDF document from a custom access descriptor.
-// Parameters:
-//          pFileAccess -   A structure for accessing the file.
-//          password    -   Optional password for decrypting the PDF file.
-// Return value:
-//          A handle to the loaded document, or NULL on failure.
-// Comments:
-//          The application must keep the file resources |pFileAccess| points to
-//          valid until the returned FPDF_DOCUMENT is closed. |pFileAccess|
-//          itself does not need to outlive the FPDF_DOCUMENT.
-//
-//          The loaded document can be closed with FPDF_CloseDocument().
-//
-//          See the comments for FPDF_LoadDocument() regarding the encoding for
-//          |password|.
-// Notes:
-//          If PDFium is built with the XFA module, the application should call
-//          FPDF_LoadXFA() function after the PDF document loaded to support XFA
-//          fields defined in the fpdfformfill.h file.
 FPDF_EXPORT FPDF_DOCUMENT FPDF_CALLCONV
 FPDF_LoadCustomDocument(FPDF_FILEACCESS* pFileAccess, FPDF_BYTESTRING password);
 
@@ -1424,33 +1368,10 @@ FPDF_EXPORT FPDF_BOOL FPDF_CALLCONV FPDF_GetXFAPacketContent(
     unsigned long* out_buflen);
 
 #ifdef PDF_ENABLE_V8
-// Function: FPDF_GetRecommendedV8Flags
-//          Returns a space-separated string of command line flags that are
-//          recommended to be passed into V8 via V8::SetFlagsFromString()
-//          prior to initializing the PDFium library.
-// Parameters:
-//          None.
-// Return value:
-//          NUL-terminated string of the form "--flag1 --flag2".
-//          The caller must not attempt to modify or free the result.
+
 FPDF_EXPORT const char* FPDF_CALLCONV FPDF_GetRecommendedV8Flags();
 
-// Experimental API.
-// Function: FPDF_GetArrayBufferAllocatorSharedInstance()
-//          Helper function for initializing V8 isolates that will
-//          use PDFium's internal memory management.
-// Parameters:
-//          None.
-// Return Value:
-//          Pointer to a suitable v8::ArrayBuffer::Allocator, returned
-//          as void for C compatibility.
-// Notes:
-//          Use is optional, but allows external creation of isolates
-//          matching the ones PDFium will make when none is provided
-//          via |FPDF_LIBRARY_CONFIG::m_pIsolate|.
-//
-//          Can only be called when the library is in an uninitialized or
-//          destroyed state.
+
 FPDF_EXPORT void* FPDF_CALLCONV FPDF_GetArrayBufferAllocatorSharedInstance();
 #endif  // PDF_ENABLE_V8
 

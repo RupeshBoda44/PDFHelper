@@ -1,6 +1,4 @@
-// Copyright 2017 The PDFium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+
 
 #ifndef PUBLIC_FPDF_CATALOG_H_
 #define PUBLIC_FPDF_CATALOG_H_

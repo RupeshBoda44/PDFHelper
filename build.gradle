@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.library' version '8.11.2'
+    id 'com.android.library' version '8.13.0'
     id 'maven-publish'
 }
 
@@ -27,7 +27,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -35,22 +35,19 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-            withJavadocJar()
-        }
-    }
-
-
+    ndkVersion '28.1.13356709'
     externalNativeBuild {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
             version "3.22.1"
         }
     }
-
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
     sourceSets {
         main {
             jniLibs.srcDirs = ['src/main/jniLibs']

@@ -1,8 +1,3 @@
-// Copyright 2014 The PDFium Authors
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-// Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #ifndef PUBLIC_FPDF_SYSFONTINFO_H_
 #define PUBLIC_FPDF_SYSFONTINFO_H_
@@ -51,74 +46,13 @@ typedef struct _FPDF_SYSFONTINFO {
    */
   int version;
 
-  /*
-   * Method: Release
-   *          Give implementation a chance to release any data after the
-   *          interface is no longer used.
-   * Interface Version:
-   *          1
-   * Implementation Required:
-   *          No
-   * Parameters:
-   *          pThis       -   Pointer to the interface structure itself
-   * Return Value:
-   *          None
-   * Comments:
-   *          Called by PDFium during the final cleanup process.
-   */
+  /**/
   void (*Release)(struct _FPDF_SYSFONTINFO* pThis);
 
-  /*
-   * Method: EnumFonts
-   *          Enumerate all fonts installed on the system
-   * Interface Version:
-   *          1
-   * Implementation Required:
-   *          No
-   * Parameters:
-   *          pThis       -   Pointer to the interface structure itself
-   *          pMapper     -   An opaque pointer to internal font mapper, used
-   *                          when calling FPDF_AddInstalledFont().
-   * Return Value:
-   *          None
-   * Comments:
-   *          Implementations should call FPDF_AddIntalledFont() function for
-   *          each font found. Only TrueType/OpenType and Type1 fonts are accepted
-   *          by PDFium.
-   */
+  /**/
   void (*EnumFonts)(struct _FPDF_SYSFONTINFO* pThis, void* pMapper);
 
-  /*
-   * Method: MapFont
-   *          Use the system font mapper to get a font handle from requested
-   *          parameters.
-   * Interface Version:
-   *          1
-   * Implementation Required:
-   *          Required if GetFont method is not implemented.
-   * Parameters:
-   *          pThis       -   Pointer to the interface structure itself
-   *          weight      -   Weight of the requested font. 400 is normal and
-   *                          700 is bold.
-   *          bItalic     -   Italic option of the requested font, TRUE or
-   *                          FALSE.
-   *          charset     -   Character set identifier for the requested font.
-   *                          See above defined constants.
-   *          pitch_family -  A combination of flags. See above defined
-   *                          constants.
-   *          face        -   Typeface name. Currently use system local encoding
-   *                          only.
-   *          bExact      -   Obsolete: this parameter is now ignored.
-   * Return Value:
-   *          An opaque pointer for font handle, or NULL if system mapping is
-   *          not supported.
-   * Comments:
-   *          If the system supports native font mapper (like Windows),
-   *          implementation can implement this method to get a font handle.
-   *          Otherwise, PDFium will do the mapping and then call GetFont
-   *          method. Only TrueType/OpenType and Type1 fonts are accepted
-   *          by PDFium.
-   */
+  /**/
   void* (*MapFont)(struct _FPDF_SYSFONTINFO* pThis,
                    int weight,
                    FPDF_BOOL bItalic,
@@ -127,22 +61,6 @@ typedef struct _FPDF_SYSFONTINFO {
                    const char* face,
                    FPDF_BOOL* bExact);
 
-  /*
-   * Method: GetFont
-   *          Get a handle to a particular font by its internal ID
-   * Interface Version:
-   *          1
-   * Implementation Required:
-   *          Required if MapFont method is not implemented.
-   * Return Value:
-   *          An opaque pointer for font handle.
-   * Parameters:
-   *          pThis       -   Pointer to the interface structure itself
-   *          face        -   Typeface name in system local encoding.
-   * Comments:
-   *          If the system mapping not supported, PDFium will do the font
-   *          mapping and use this method to get a font handle.
-   */
   void* (*GetFont)(struct _FPDF_SYSFONTINFO* pThis, const char* face);
 
   /*
@@ -247,69 +165,19 @@ typedef struct FPDF_CharsetFontMap_ {
  */
 FPDF_EXPORT const FPDF_CharsetFontMap* FPDF_CALLCONV FPDF_GetDefaultTTFMap();
 
-/*
- * Function: FPDF_AddInstalledFont
- *          Add a system font to the list in PDFium.
- * Comments:
- *          This function is only called during the system font list building
- *          process.
- * Parameters:
- *          mapper          -   Opaque pointer to Foxit font mapper
- *          face            -   The font face name
- *          charset         -   Font character set. See above defined constants.
- * Return Value:
- *          None.
- */
+/**/
 FPDF_EXPORT void FPDF_CALLCONV FPDF_AddInstalledFont(void* mapper,
                                                      const char* face,
                                                      int charset);
 
-/*
- * Function: FPDF_SetSystemFontInfo
- *          Set the system font info interface into PDFium
- * Parameters:
- *          pFontInfo       -   Pointer to a FPDF_SYSFONTINFO structure
- * Return Value:
- *          None
- * Comments:
- *          Platform support implementation should implement required methods of
- *          FFDF_SYSFONTINFO interface, then call this function during PDFium
- *          initialization process.
- *
- *          Call this with NULL to tell PDFium to stop using a previously set
- *          |FPDF_SYSFONTINFO|.
- */
+/**/
 FPDF_EXPORT void FPDF_CALLCONV
 FPDF_SetSystemFontInfo(FPDF_SYSFONTINFO* pFontInfo);
 
-/*
- * Function: FPDF_GetDefaultSystemFontInfo
- *          Get default system font info interface for current platform
- * Parameters:
- *          None
- * Return Value:
- *          Pointer to a FPDF_SYSFONTINFO structure describing the default
- *          interface, or NULL if the platform doesn't have a default interface.
- *          Application should call FPDF_FreeDefaultSystemFontInfo to free the
- *          returned pointer.
- * Comments:
- *          For some platforms, PDFium implements a default version of system
- *          font info interface. The default implementation can be passed to
- *          FPDF_SetSystemFontInfo().
- */
+/**/
 FPDF_EXPORT FPDF_SYSFONTINFO* FPDF_CALLCONV FPDF_GetDefaultSystemFontInfo();
 
-/*
- * Function: FPDF_FreeDefaultSystemFontInfo
- *           Free a default system font info interface
- * Parameters:
- *           pFontInfo       -   Pointer to a FPDF_SYSFONTINFO structure
- * Return Value:
- *           None
- * Comments:
- *           This function should be called on the output from
- *           FPDF_GetDefaultSystemFontInfo() once it is no longer needed.
- */
+/**/
 FPDF_EXPORT void FPDF_CALLCONV
 FPDF_FreeDefaultSystemFontInfo(FPDF_SYSFONTINFO* pFontInfo);
 
